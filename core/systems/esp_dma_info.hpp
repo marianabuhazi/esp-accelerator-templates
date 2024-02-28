@@ -6,8 +6,8 @@
 
 #include <sstream>
 
-#include "utils/esp_types.hpp"
 #include "utils/esp_systemc.hpp"
+#include "utils/esp_types.hpp"
 
 #define SIZE_BYTE   sc_dt::sc_bv<3>(0)
 #define SIZE_HWORD  sc_dt::sc_bv<3>(1)
@@ -18,49 +18,43 @@
 #define SIZE_16WORD sc_dt::sc_bv<3>(6)
 #define SIZE_32WORD sc_dt::sc_bv<3>(7)
 
+class dma_info_t {
 
-class dma_info_t
-{
+  public:
+    // Index
+    uint32_t index;
 
-    public:
+    // Length
+    uint32_t length;
 
-        // Index
-        uint32_t index;
+    // Length
+    sc_dt::sc_bv<3> size;
 
-        // Length
-        uint32_t length;
+    // Constructors
 
-        // Length
-        sc_dt::sc_bv<3> size;
+    dma_info_t() : index(0), length(0), size(SIZE_WORD) {}
 
-        // Constructors
+    dma_info_t(uint32_t i, uint32_t l, sc_dt::sc_bv<3> s) : index(i), length(l), size(s) {}
 
-        dma_info_t()
-            : index(0), length(0), size(SIZE_WORD) { }
+    dma_info_t(const dma_info_t &other) : index(other.index), length(other.length), size(other.size)
+    {
+    }
 
-        dma_info_t(uint32_t i, uint32_t l, sc_dt::sc_bv<3> s)
-            : index(i), length(l), size(s) { }
+    // Operators
 
-        dma_info_t(const dma_info_t &other)
-            : index(other.index), length(other.length), size(other.size) { }
+    // Assign operator
+    inline dma_info_t &operator=(const dma_info_t &other);
 
-        // Operators
+    // Equals operator
+    inline bool operator==(const dma_info_t &rhs) const;
 
-        // Assign operator
-        inline dma_info_t &operator=(const dma_info_t &other);
+    // Friend zone
 
-        // Equals operator
-        inline bool operator==(const dma_info_t &rhs) const;
+    // Dump operator
+    friend inline ostream &operator<<(ostream &os, dma_info_t const &dma_info);
 
-        // Friend zone
-
-        // Dump operator
-        friend inline ostream &operator<<(ostream &os, dma_info_t const &dma_info);
-
-        // Makes this type traceable by SystemC
-        friend inline void sc_trace(sc_trace_file *tf, const dma_info_t &v,
-                                    const std::string &name);
-
+    // Makes this type traceable by SystemC
+    friend inline void sc_trace(sc_trace_file *tf, const dma_info_t &v, const std::string &name);
 };
 
 // Implementation
